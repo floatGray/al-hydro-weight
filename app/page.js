@@ -1,13 +1,25 @@
-import ReadFileContent from '@/components/readFile';
 
-export default function Home() {
-  const xyzFileContent = ReadFileContent('a.xyz');
+
+import Image from "next/image";
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import Script from 'next/script'
+import MoleculeViewer from "@/components/MoleculeViewer";
+import ReadFileContent from '@/components/readFile';
+function Home() {
+    const onFileChange = () => {
+        console.log(1)
+    }
+     const xyzFileContent = ReadFileContent('a.xyz');
   const jsonFileContent = ReadFileContent('b.json');
   return (
-    <div>
-      <h1 className="mb-8">读取文件</h1>
-      <p className="border-4 border-fuchsia-950">{xyzFileContent}</p>
+      <>
+          {/*<Input type="file" id="上传文件"></Input>*/}
+          {/*<Button></Button>*/}
+          <MoleculeViewer/>
+            <p className="border-4 border-fuchsia-950">{xyzFileContent}</p>
       <p>{jsonFileContent}</p>
-    </div>
+      </>
+
   );
 }
