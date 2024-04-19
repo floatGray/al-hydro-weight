@@ -1,16 +1,13 @@
-import Image from "next/image";
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-function Home() {
-    const onFileChange = () => {
-        console.log(1)
-    }
+import ReadFileContent from '@/components/readFile';
+
+export default function Home() {
+  const xyzFileContent = ReadFileContent('a.xyz');
+  const jsonFileContent = ReadFileContent('b.json');
   return (
-      <>
-          <Input type="file" id="上传文件"></Input>
-          <Button></Button>
-      </>
+    <div>
+      <h1 className="mb-8">读取文件</h1>
+      <p className="border-4 border-fuchsia-950">{xyzFileContent}</p>
+      <p>{jsonFileContent}</p>
+    </div>
   );
 }
-
-export default Home
