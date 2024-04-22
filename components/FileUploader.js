@@ -1,5 +1,7 @@
 'use client';
 import React, { useState } from 'react';
+import {Button} from "@/components/ui/button";
+import Link from "next/link";
 
 function FileUploader() {
   const [file, setFile] = useState(null);
@@ -32,12 +34,11 @@ function FileUploader() {
           className="mb-3 w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
         />
         {file && (
-          <button
-            onClick={handleUpload}
-            className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700 transition duration-300"
-          >
-            Upload
-          </button>
+            <Link href={'/result'} className="flex justify-center mt-4">
+              <Button>
+                查看结果
+              </Button>
+            </Link>
         )}
       </div>
     </div>
