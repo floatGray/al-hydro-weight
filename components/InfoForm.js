@@ -17,13 +17,19 @@ const InfoForm = () => {
     });
 
     const onSubmit = data => {
-        console.log(data);
-        alert("Form submitted: Check the console for details!");
+        fetch('/api/submitUserInfo', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data),
+        }).then(res=>{
+            console.log(res)
+        })
     };
 
     return (
         <>
-
             <FormProvider {...methods}>
                 <form onSubmit={methods.handleSubmit(onSubmit)} className="space-y-6 bg-white p-8 rounded shadow-md max-w-lg mx-auto my-10">
                     <p className="text-lg text-center font-medium mb-6">在使用前，请告诉我们您的邮箱与单位</p>
