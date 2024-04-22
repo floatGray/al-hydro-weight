@@ -1,9 +1,10 @@
 import MoleculeViewer from '@/components/MoleculeViewer';
 import ReadFile from '@/components/ReadFile';
-
+import Header from "@/components/Header";
 async function result() {
   //   const xyzFileContent = await ReadFile('a.xyz');
-
+    const xyzData = await ReadFile('a.xyz');
+    const jsonFileContent = ReadFile('b.json');
   const xyzFileContent = `67
 Cl1O5N6C27H28
 Cl 4.156474713831123 16.261803546000003 10.721246538839655
@@ -75,7 +76,8 @@ H 4.640826683210488 24.545217870000002 7.084393228047403
 H 4.16580992051492 24.301619826000003 8.558377775397647`;
   return (
     <>
-      <MoleculeViewer xyzData={xyzFileContent} />
+        <Header/>
+        <MoleculeViewer xyzData={xyzData} />
     </>
   );
 }

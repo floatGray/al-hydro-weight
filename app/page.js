@@ -4,16 +4,16 @@ import ReadFile from '@/components/ReadFile';
 import FileUploader from '@/components/FileUploader';
 import InfoForm from "@/components/InfoForm";
 import VantaBackground from "@/components/MoleculeBackground";
+import Header from "@/components/Header";
 import Link from 'next/link';
 async function Home() {
   const onFileChange = () => {
     console.log(1);
   };
-  const xyzFileContent = await ReadFile('a.xyz');
-  const jsonFileContent = ReadFile('b.json');
 
   return (
     <>
+        <Header/>
         <VantaBackground/>
       <InfoForm/>
       <FileUploader />

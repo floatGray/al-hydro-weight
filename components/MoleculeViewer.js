@@ -27,7 +27,17 @@ const MoleculeViewer = ({ xyzData }) => {
   return (
     <>
       <Script src="https://3Dmol.org/build/3Dmol.js" />
-      <div ref={viewerRef} style={{ width: '600px', height: '400px' }} />
+      <div style={{
+        width: '80%',
+        height: '400px',
+        position: 'absolute', // 或者 'relative' 根据需求选择
+        top: '100px', // 从顶部100px的位置开始
+        left: '50%', // 从左边界中心开始
+        transform: 'translateX(-50%)', // 向左移动自身宽度的50%，以达到水平居中
+        textAlign: 'center'
+      }}>
+        <div ref={viewerRef} style={{ width: '100%', height: '100%' }} />
+      </div>
     </>
   );
 };
