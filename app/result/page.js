@@ -1,11 +1,23 @@
 import MoleculeViewer from '@/components/MoleculeViewer';
 import ReadFile from '@/components/ReadFile';
 import Header from "@/components/Header";
+import {
+    Table,
+    TableBody,
+    TableCaption,
+    TableCell,
+    TableHead,
+    TableHeader,
+    TableRow,
+} from "@/components/ui/table"
+import {Button} from "@/components/ui/button";
+
 async function result() {
-  //   const xyzFileContent = await ReadFile('a.xyz');
+    //   const xyzFileContent = await ReadFile('a.xyz');
     const xyzData = await ReadFile('a.xyz');
-    const jsonFileContent = ReadFile('b.json');
-  const xyzFileContent = `67
+    let jsonFileContent = await ReadFile('b.json');
+    jsonFileContent = JSON.parse(jsonFileContent)
+    const xyzFileContent = `67
 Cl1O5N6C27H28
 Cl 4.156474713831123 16.261803546000003 10.721246538839655
 O 3.2312190087573516 17.409231138000003 13.372948415294683
@@ -74,11 +86,37 @@ C 4.324414164570057 23.886787746000003 7.707269491085456
 H 3.5068988322884467 23.504020230000002 7.380549059264423
 H 4.640826683210488 24.545217870000002 7.084393228047403
 H 4.16580992051492 24.301619826000003 8.558377775397647`;
-  return (
-    <>
-        <Header/>
-        <MoleculeViewer xyzData={xyzData} />
-    </>
-  );
+    return (
+        <>
+            <Header/>
+            <div className="min-h-[450px]">
+                <MoleculeViewer xyzData={xyzData}></MoleculeViewer>
+            </div>
+            <div className="flex justify-center" style={{width:'70%',margin:'0 auto'}}>
+                <Table>
+                    <TableHeader>
+                        <TableRow>
+                            <TableHead>wr2</TableHead>
+                            <TableHead>r1</TableHead>
+                            <TableHead>goof</TableHead>
+                            <TableHead>q1</TableHead>
+                        </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                        <TableRow>
+                            <TableCell>{jsonFileContent.wr2}</TableCell>
+                            <TableCell>{jsonFileContent.r1}</TableCell>
+                            <TableCell>{jsonFileContent.goof}</TableCell>
+                            <TableCell>{jsonFileContent.q1}</TableCell>
+                        </TableRow>
+                    </TableBody>
+                </Table>
+            </div>
+            <div className="flex justify-center">
+                <Button>点击此处下载文件</Button>
+            </div>
+        </>
+    );
 }
+
 export default result;
