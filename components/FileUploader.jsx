@@ -8,6 +8,15 @@ import { ArrowUpTrayIcon } from '@heroicons/react/24/solid';
 function FileUploader() {
   const [file, setFile] = useState(null);
   const [fileName, setFileName] = useState('');
+  const [insFile, setInsFile] = useState(null);
+  const [hklFile, setHklFile] = useState(null);
+
+  const handleInsFileChange = (e) => {
+    setInsFile(e.target.files[0]);
+  };
+  const handleHklFileChange = (e) => {
+    setHklFile(e.target.files[0]);
+  };
 
   const handleFileChange = (e) => {
     const newFile = e.target.files[0];
@@ -37,6 +46,21 @@ function FileUploader() {
 
   return (
     <div className="p-4 max-w-md mx-auto mt-10 bg-white shadow-lg rounded-lg">
+      <div className="flex flex-col items-center justify-center">
+        <label className="block mb-2 text-sm font-bold text-gray-700">
+          上传.ins文件
+        </label>
+        <Input type="file" accept=".ins" onChange={handleInsFileChange} />
+        <label className="block mb-2 text-sm font-bold text-gray-700">
+          上传.hkl文件
+        </label>
+        <Input type="file" accept=".hkl" onChange={handleHklFileChange} />
+        {insFile && hklFile && (
+          <Link href={'/result'} className="flex justify-center mt-4">
+            <Button>查看结果</Button>
+          </Link>
+        )}
+      </div>
       <div className="col-span-full">
         <div className="mt-2 flex justify-center rounded-lg border border-dashed border-gray-900/25 px-6 py-10">
           <div className="text-center">
