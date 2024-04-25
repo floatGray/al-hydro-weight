@@ -24,9 +24,13 @@ function FileUploader() {
     setFileName(newFile.name); // 更新状态为文件名
   };
 
-  const handleUpload = () => {
+  const handleUpload = (files) => {
+    console.log(files)
     const formData = new FormData();
-    formData.append('file', file);
+    for (let i = 0; i < files.length; i++) {
+      formData.append('files', files[i]);
+    }
+
     fetch('/api/upload', {
       method: 'POST',
       body: formData,
@@ -56,9 +60,17 @@ function FileUploader() {
         </label>
         <Input type="file" accept=".hkl" onChange={handleHklFileChange} />
         {insFile && hklFile && (
-          <Link href={'/result'} className="flex justify-center mt-4">
-            <Button>查看结果</Button>
-          </Link>
+          <>
+            <Link href={'/result'} className="flex justify-center mt-4">
+              <Button>查看结果</Button>
+            </Link> 
+            <Button
+              className="flex justify-center mt-4"
+              onClick={handleUpload([insFile, hklFile])}
+            >
+              确认上传
+            </Button>
+          </>
         )}
       </div>
       <div className="col-span-full">
