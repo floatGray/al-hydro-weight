@@ -20,14 +20,12 @@ export const GET = async (req, res) => {
     // 等待 Promise 解决
     const output = await execPromise(command);
     return new NextResponse(
-      JSON.stringify({ Message: 'Success', Output: output }),
-      { status: 200 }
+      JSON.stringify({ Message: 'Success', Output: output,status:200 })
     );
   } catch (error) {
     console.error('Error occurred', error);
     return new NextResponse(
-      JSON.stringify({ Message: 'Failed', Error: error }),
-      { status: 500 }
+      JSON.stringify({ Message: 'Failed', Error: error,status:500 })
     );
   }
 };
