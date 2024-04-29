@@ -3,7 +3,7 @@ import { exec } from 'child_process';
 
 export const GET = async (req, res) => {
   try {
-    const command = 'echo sh completed';
+    const command = 'ls';
 
     // 将 exec 转换为 Promise
     const execPromise = (command) =>
@@ -13,6 +13,7 @@ export const GET = async (req, res) => {
             reject(`exec error: ${error}`);
           } else {
             resolve(stdout);
+            console.log(stdout)
           }
         });
       });
