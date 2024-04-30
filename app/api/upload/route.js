@@ -21,15 +21,15 @@ export const POST = async (req, res) => {
   const hklFileName = hklFile.name.replaceAll(' ', '_');
  // const filename = file.name.replaceAll(' ', '_');
   try {
-    const assetsDir = path.resolve('./public/assets');  // 定义存储文件的目录路径
+    const assetsDir = path.resolve('../xrd');  // 定义存储文件的目录路径
 
     // 写入文件到public/assets目录
     await writeFile(
-        path.join(assetsDir, insFileName),
+        path.join(assetsDir, 'alishatanzhi.ins'),
         insBuffer
     );
     await writeFile(
-        path.join(assetsDir, hklFileName),
+        path.join(assetsDir, 'alishatanzhi.hkl'),
         hklBuffer
     );
     return NextResponse.json({ Message: 'Success', status: 201 });
