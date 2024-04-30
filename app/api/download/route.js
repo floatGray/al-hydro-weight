@@ -1,6 +1,7 @@
 import { promises as fs } from 'fs';
 import path from 'path';
 import { NextResponse } from 'next/server';
+import { match } from 'assert';
 
 export const GET = async (req, res) => {
   try {
@@ -14,11 +15,16 @@ export const GET = async (req, res) => {
       const stats = await fs.stat(filePath);
 
       if (stats.isDirectory()) {
-        console.log(matches)
         const matches = file.match(/(\d{4}-\d{2}-\d{2}_\d{2}-\d{2}-\d{2})_alishatanzhi/);
+        console.log(matches)
         if (matches) {
-          const folderDate = new Date(matches[1].replace(/_/g, 'T'));
-          if (folderDate > latestDate) {
+            const datePart = matches[1].substring(0, 10); // 'YYYY-MM-DD'
+            const timePart = matches[1].substring(11).replace(/-/g, ':'); // 'HH:MM:SS'
+            const standardDateTime = datePart + ' ' + timePart; // 'YYYY-MM-DD HH:MM:SS'
+            const folderDate = new Date(standardDateTime);
+          console.log(folderDate)
+          console.log(latestDate)
+          if (folderDate < new Date() && folderDate > latestDate) {
             latestDate = folderDate;
             latestFolder = file;
           }
