@@ -1,7 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 
-const ReadFile = async (fileName) => {
+const FilePath = async () => {
   const directoryPath = path.join(process.cwd(), '../xrd');
 
   // 使用 fs.promises API 读取目录
@@ -30,12 +30,10 @@ const ReadFile = async (fileName) => {
 
   // 读取文件内容
   if (latestFolder) {
-    const targetFilePath = path.join(directoryPath, latestFolder, fileName);
-    const fileContent = await fs.promises.readFile(targetFilePath, 'utf8');
-    return fileContent;
+    return latestFolder;
   } else {
     throw new Error('No latest folder found.');
   }
 };
 
-export default ReadFile;
+export default FilePath;
