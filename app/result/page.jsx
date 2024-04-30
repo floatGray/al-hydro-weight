@@ -17,7 +17,7 @@ async function result() {
   const xyzData = await ReadFile('a.xyz');
   let jsonFileContent = await ReadFile('b.json');
   jsonFileContent = JSON.parse(jsonFileContent);
-
+  
   return (
     <>
       <Header />

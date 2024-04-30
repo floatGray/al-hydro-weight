@@ -3,8 +3,7 @@ import { exec } from 'child_process';
 
 export const GET = async (req, res) => {
   try {
-    const command = 'ls';
-
+    const command = 'cd .. && cd xrd && sh temp_demo_new.sh';
     // 将 exec 转换为 Promise
     const execPromise = (command) =>
       new Promise((resolve, reject) => {
