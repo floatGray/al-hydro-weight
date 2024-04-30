@@ -11,13 +11,13 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { Button } from '@/components/ui/button';
-
+//import { useRouter } from 'next/router';
 async function result() {
-  //   const xyzFileContent = await ReadFile('a.xyz');
-  const xyzData = await ReadFile('a.xyz');
-  let jsonFileContent = await ReadFile('b.json');
+  const xyzData = await ReadFile('alishatanzhi_AIhydroWeightFinal.xyz');
+  let jsonFileContent = await ReadFile('alishatanzhi_AIhydroWeightFinalMetrics.json');
   jsonFileContent = JSON.parse(jsonFileContent);
-  
+  // console.log(folderName)
+
   return (
     <>
       <Header />

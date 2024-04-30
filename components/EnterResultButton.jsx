@@ -1,18 +1,16 @@
+import { Link } from "lucide-react";
 import { Button } from "./ui/button"
 import { useRouter } from 'next/navigation';
 function ResultButton(){
     const router = useRouter()
+    let folderName = ''
     const enterResult = () => {
-        fetch('/api/download',{
-            method:'GET'
-        }).then(res=>{
-            console.log(res)
-        })
         router.push('/result')
+
     }
     return(
         <>
-            <Button onClick={enterResult}>查看结果</Button>
+         <Button onClick={enterResult}>查看结果</Button>
         </>
     )
 }
