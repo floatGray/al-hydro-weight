@@ -1,6 +1,7 @@
 import MoleculeViewer from '@/components/MoleculeViewer';
 import ReadFile from '@/components/ReadFile';
 import Header from '@/components/Header';
+import FilePath from '@/components/FilePath';
 import {
   Table,
   TableBody,
@@ -11,12 +12,26 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { Button } from '@/components/ui/button';
-
+//import { useRouter } from 'next/router';
 async function result() {
-  //   const xyzFileContent = await ReadFile('a.xyz');
-  const xyzData = await ReadFile('a.xyz');
-  let jsonFileContent = await ReadFile('b.json');
+  const xyzData = await ReadFile('alishatanzhi_AIhydroWeightFinal.xyz');
+  let jsonFileContent = await ReadFile('alishatanzhi_AIhydroWeightFinalMetrics.json');
+  let fileZip = await FilePath()
   jsonFileContent = JSON.parse(jsonFileContent);
+  // console.log(folderName)
+
+  const downloadFile = (url, downloadName = '') => {
+    // console.log(url);
+    const link = document.createElement('a');
+    fetch(url).then(res => res.blob()).then((blob) => {
+      link.href = URL.createObjectURL(blob);
+      // console.log(link.href)
+      link.download = downloadName;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    });
+  };
 
   return (
     <>
@@ -48,7 +63,11 @@ async function result() {
         </Table>
       </div>
       <div className="flex justify-center">
-        <Button>点击此处下载文件</Button>
+
+       <a href={`alishatanzhi_AIhydroWeightFinal.zip`} download>
+          <Button>点击此处下载文件</Button>
+       </a>
+
       </div>
     </>
   );
