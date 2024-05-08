@@ -2,24 +2,18 @@ import { NextResponse } from 'next/server';
 import path from 'path';
 import { writeFile } from 'fs/promises';
 import {Buffer} from "buffer";
-import process from "next/dist/build/webpack/loaders/resolve-url-loader/lib/postcss";
 
 export const POST = async (req, res) => {
   const formData = await req.formData();
 
-  //const file = formData.get('file');
   const insFile = formData.get('insFile')
   const hklFile = formData.get('hklFile')
   if (!insFile || !hklFile) {
     return NextResponse.json({ Message: 'No files received.' ,status:400});
   }
 
-  //const buffer = Buffer.from(await file.arrayBuffer());
   const insBuffer = Buffer.from(await insFile.arrayBuffer())
   const hklBuffer = Buffer.from(await hklFile.arrayBuffer())
-  const insFileName = insFile.name.replaceAll(' ', '_')
-  const hklFileName = hklFile.name.replaceAll(' ', '_');
- // const filename = file.name.replaceAll(' ', '_');
   try {
     const assetsDir = path.resolve('../xrd');  // 定义存储文件的目录路径
 

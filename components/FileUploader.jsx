@@ -1,20 +1,19 @@
 'use client';
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import Link from 'next/link';
 import { Input } from '@/components/ui/input';
-import { ArrowUpTrayIcon } from '@heroicons/react/24/solid';
-import {Loader2} from "lucide-react";
+import { Progress } from '@/components/ui/progress';
+import { Loader2 } from "lucide-react";
 import { useRouter } from 'next/navigation';
 import ResultButton from './EnterResultButton';
 
 function FileUploader() {
-  const [file, setFile] = useState(null);
-  const [fileName, setFileName] = useState('');
   const [insFile, setInsFile] = useState(null);
   const [hklFile, setHklFile] = useState(null);
-  const [insFileName,setInsFileName] = useState('')
-  const [hklFileName,setHklFileName] = useState('')
+
+  const [progress, setProgress] = useState(0);
+  const [loading, setLoading] = useState(false);
+
 
   const handleInsFileChange = (e) => {
     const insFile = e.target.files[0]
@@ -27,16 +26,10 @@ function FileUploader() {
     setHklFileName(hklFile.name)
   };
 
-  const handleFileChange = (e) => {
-    const newFile = e.target.files[0];
-    setFile(newFile);
-    setFileName(newFile.name); // 更新状态为文件名
-  };
-
-  const [startUpload,setStartUpload] = useState(false)
-  const [startAnalysis,setStartAnalysis] = useState(false)
-  const [finishUpload,setFinishUpload] = useState(false)
-  const [finishAnalysis,setFinishAnalysis] = useState(false)
+  const [startUpload, setStartUpload] = useState(false)
+  const [startAnalysis, setStartAnalysis] = useState(false)
+  const [finishUpload, setFinishUpload] = useState(false)
+  const [finishAnalysis, setFinishAnalysis] = useState(false)
   const handleUpload = () => {
     setStartUpload(true)
     const formData = new FormData();
@@ -48,26 +41,56 @@ function FileUploader() {
     })
       .then((response) => response.json())
       .then((data) => {
-        if(data.status === 201){
+        if (data.status === 201) {
           setFinishUpload(true)
         }
       })
       .catch((error) => console.error(error));
   };
+  const [errorMsg,setErrorMsg] = useState('')
+  const [errorState,setErrorState] = useState(false)
   const handleAnalysis = () => {
     setStartAnalysis(true)
+
+    setProgress(0); // 重置进度
+    setLoading(true);
+    const interval = setInterval(() => {
+      setProgress((oldProgress) => {
+        if (oldProgress < 99) {
+          return oldProgress + 1; // 每次调用递增1%
+        }
+        clearInterval(interval);
+        return 99; // 达到99%后停止增长
+      });
+    }, 150); // 每200毫秒递增1%
+
     fetch('/api/analysis', {
       method: 'GET',
     })
-      .then((response) => response.json())
+      .then((response) => {
+        clearInterval(interval); // 停止进度条的定时器
+        if (response.status === 200) {
+          setProgress(100); // 请求成功，将进度设置为100%
+          setLoading(false); // 停止显示进度条
+        }
+        return response.json();
+      })
       .then((data) => {
-        if(data.status===200){
+        if (data.status === 200) {
           setFinishAnalysis(true)
+        }else{
+          setErrorMsg(data.Error)
+          console.log(errorMsg)
+          setFinishAnalysis(true)
+          setErrorState(true)
         }
       })
-      .catch((error) => console.error(error));
-  };
+      .catch((error) => {
+        console.error('Error during analysis:', error);
+        setLoading(false); // 在出错时也停止加载
+      });
 
+  };
   const router = useRouter()
   const linkResult = () => {
     router.push('/result')
@@ -84,44 +107,56 @@ function FileUploader() {
         </label>
         <Input type="file" accept=".hkl" onChange={handleHklFileChange} />
         {insFile && hklFile && !finishUpload && (
-            <>
-              <Button className="flex justify-center mt-4" onClick={handleUpload}>
-                {!startUpload && (
-                    <>
-                      确认上传
-                    </>
-                )
-                }
-                {startUpload && (
-                    <>
-                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                      Please wait
-                    </>
-                  )}
-              </Button>
-            </>
+          <>
+            <Button className="flex justify-center mt-4" onClick={handleUpload}>
+              {!startUpload && (
+                <>
+                  确认上传
+                </>
+              )
+              }
+              {startUpload && (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Please wait
+                </>
+              )}
+            </Button>
+          </>
         )}
         {finishUpload && !finishAnalysis &&(
+          <>
+            {loading &&
+              <div>
+                <Progress value={progress} />
+                当前进度:{progress}%
+              </div>}
             <Button
-                className="flex justify-center mt-4"
-                onClick={handleAnalysis}
+              className="flex justify-center mt-4"
+              onClick={handleAnalysis}
             >
               {!startAnalysis && (
-                  <>
-                    开始分析
-                  </>
+                <>
+                  开始分析
+                </>
               )
               }
               {startAnalysis && (
-                  <>
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    Please wait
-                  </>
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Please wait
+                </>
               )}
             </Button>
+          </>
         )}
-        {finishAnalysis && (
-            <ResultButton></ResultButton>
+        {finishAnalysis && !errorState && (
+          <ResultButton></ResultButton>
+        )}
+        {finishAnalysis && errorState && (
+          <>
+          {errorMsg},请刷新页面重新上传！
+          </>
         )}
       </div>
     </div>

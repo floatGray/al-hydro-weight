@@ -2,6 +2,8 @@ import MoleculeViewer from '@/components/MoleculeViewer';
 import ReadFile from '@/components/ReadFile';
 import Header from '@/components/Header';
 import FilePath from '@/components/FilePath';
+import 'katex/dist/katex.min.css';
+import { InlineMath } from 'react-katex';
 import {
   Table,
   TableBody,
@@ -32,12 +34,12 @@ async function result() {
       document.body.removeChild(link);
     });
   };
-
+  let formular = jsonFileContent.formular.replace(/([A-Z][a-z]*)(\d+)/g, (match, p1, p2) => `${p1}_{${p2}}`);
   return (
     <>
       <Header />
       <div className="min-h-[450px]">
-        <MoleculeViewer xyzData={xyzData}></MoleculeViewer>
+        <MoleculeViewer xyzData={xyzData}/>
       </div>
       <div
         className="flex justify-center"
@@ -50,6 +52,9 @@ async function result() {
               <TableHead>r1</TableHead>
               <TableHead>goof</TableHead>
               <TableHead>q1</TableHead>
+              <TableHead>structure_mes</TableHead>
+              <TableHead>quality_mes</TableHead>
+              <TableHead>Formula</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -58,16 +63,19 @@ async function result() {
               <TableCell>{jsonFileContent.r1}</TableCell>
               <TableCell>{jsonFileContent.goof}</TableCell>
               <TableCell>{jsonFileContent.q1}</TableCell>
+              <TableCell>{jsonFileContent.structure_mes}</TableCell>
+              <TableCell>{jsonFileContent.quality_mes}</TableCell>
+              <TableCell><InlineMath math={formular} /></TableCell>
             </TableRow>
           </TableBody>
         </Table>
+      
       </div>
       <div className="flex justify-center">
 
        <a href={`alishatanzhi_AIhydroWeightFinal.zip`} download>
           <Button>点击此处下载文件</Button>
        </a>
-
       </div>
     </>
   );
