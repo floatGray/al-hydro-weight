@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "next dev -p 4000",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"
@@ -16,6 +16,7 @@
     "@radix-ui/react-slot": "^1.0.2",
     "@react-three/drei": "^9.105.4",
     "@react-three/fiber": "^8.16.2",
+    "@tailwindcss/forms": "^0.5.7",
     "3dmol": "^2.1.0",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.0",
@@ -30,6 +31,7 @@
     "tailwind-merge": "^2.2.2",
     "tailwindcss-animate": "^1.0.7",
     "three": "^0.163.0",
+    "uuid": "^9.0.1",
     "vanta": "^0.5.24",
     "zod": "^3.23.0"
   },

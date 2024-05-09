@@ -8,6 +8,8 @@ export const POST = async (req, res) => {
 
   const insFile = formData.get('insFile')
   const hklFile = formData.get('hklFile')
+  const id = formData.get('id')
+
   if (!insFile || !hklFile) {
     return NextResponse.json({ Message: 'No files received.' ,status:400});
   }
@@ -19,11 +21,11 @@ export const POST = async (req, res) => {
 
     // 写入文件到public/assets目录
     await writeFile(
-        path.join(assetsDir, 'alishatanzhi.ins'),
+        path.join(assetsDir, `${id}.ins`),
         insBuffer
     );
     await writeFile(
-        path.join(assetsDir, 'alishatanzhi.hkl'),
+        path.join(assetsDir, `${id}.hkl`),
         hklBuffer
     );
     return NextResponse.json({ Message: 'Success', status: 201 });

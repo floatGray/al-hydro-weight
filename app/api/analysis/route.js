@@ -1,10 +1,13 @@
 import { NextResponse } from 'next/server';
 import { exec } from 'child_process';
-import FilePath from '@/components/FilePath';
+import FilePath from '@/components/FilePath.js';
 import { promises as fs } from 'fs'; // 确保导入 fs 的 promises API
-export const GET = async (req, res) => {
+export const POST = async (req, res) => {
+  const data = await req.json()
+  const id = data.existingID
+  console.log(id)
   try {
-    const command = 'cd .. && cd xrd && sh temp_demo_new.sh alishatanzhi';
+    const command = `cd .. && cd xrd && sh temp_demo_new.sh ${id}`;
     // 将 exec 转换为 Promise
     const execPromise = (command) =>
       new Promise((resolve, reject) => {
@@ -13,15 +16,14 @@ export const GET = async (req, res) => {
             reject(`exec error: ${error}`);
           } else {
             resolve(stdout);
-            console.log(stdout)
           }
         });
       });
 
     // 等待 Promise 解决
-    const output = await execPromise(command);
+    await execPromise(command);
 
-    const folderName = await FilePath()
+    const folderName = await FilePath({id})
 
     const errorFilePath = `/home/PJLAB/liyuqiang/ai4chem/xrd/${folderName}/ERROR.json`
     try {
@@ -32,27 +34,11 @@ export const GET = async (req, res) => {
         JSON.stringify({ Message: 'Failed', Error: errorInfo.error,status:500 })
       )
     } catch (error) {
-      const command2 = `cp -r /home/PJLAB/liyuqiang/ai4chem/xrd/${folderName}/alishatanzhi_AIhydroWeightFinal.zip /home/PJLAB/liyuqiang/ai4chem/al-hydro-weight/public`
-      const execPromise2 = (command2) =>
-        new Promise((resolve, reject) => {
-          exec(command2, (error, stdout, stderr) => {
-            if (error) {
-              reject(`exec error: ${error}`);
-            } else {
-              resolve(stdout);
-              console.log(stdout)
-            }
-          });
-        });
-  
-      // 等待 Promise 解决
-      const output2 = await execPromise2(command2);
+     
     }
   
-
-
     return new NextResponse(
-      JSON.stringify({ Message: 'Success', Output: output,status:200 })
+      JSON.stringify({ Message: 'Success', status:200 ,id})
     );
   } catch (error) {
     console.error('Error occurred', error);

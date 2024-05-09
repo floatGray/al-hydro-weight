@@ -1,10 +1,10 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Progress } from '@/components/ui/progress';
 import { Loader2 } from "lucide-react";
-import { useRouter } from 'next/navigation';
+import { generateRandomString } from '@/utils/randomString'
 import ResultButton from './EnterResultButton';
 
 function FileUploader() {
@@ -13,28 +13,29 @@ function FileUploader() {
 
   const [progress, setProgress] = useState(0);
   const [loading, setLoading] = useState(false);
-
+  const [existingID, setExistingID] = useState(''); // 使用 useState 管理 existingID
 
   const handleInsFileChange = (e) => {
-    const insFile = e.target.files[0]
+    const insFile = e.target.files[0];
     setInsFile(insFile);
-    setInsFileName(insFile.name)
-  };
-  const handleHklFileChange = (e) => {
-    const hklFile = e.target.files[0]
-    setHklFile(hklFile);
-    setHklFileName(hklFile.name)
   };
 
-  const [startUpload, setStartUpload] = useState(false)
-  const [startAnalysis, setStartAnalysis] = useState(false)
-  const [finishUpload, setFinishUpload] = useState(false)
-  const [finishAnalysis, setFinishAnalysis] = useState(false)
+  const handleHklFileChange = (e) => {
+    const hklFile = e.target.files[0];
+    setHklFile(hklFile);
+  };
+
+  const [startUpload, setStartUpload] = useState(false);
+  const [startAnalysis, setStartAnalysis] = useState(false);
+  const [finishUpload, setFinishUpload] = useState(false);
+  const [finishAnalysis, setFinishAnalysis] = useState(false);
+
   const handleUpload = () => {
-    setStartUpload(true)
+    setStartUpload(true);
     const formData = new FormData();
     formData.append('insFile', insFile);
-    formData.append('hklFile', hklFile)
+    formData.append('hklFile', hklFile);
+    formData.append('id', existingID); // 使用状态变量 existingID
     fetch('/api/upload', {
       method: 'POST',
       body: formData,
@@ -42,17 +43,20 @@ function FileUploader() {
       .then((response) => response.json())
       .then((data) => {
         if (data.status === 201) {
-          setFinishUpload(true)
+          setFinishUpload(true);
         }
       })
       .catch((error) => console.error(error));
   };
-  const [errorMsg,setErrorMsg] = useState('')
-  const [errorState,setErrorState] = useState(false)
-  const handleAnalysis = () => {
-    setStartAnalysis(true)
 
-    setProgress(0); // 重置进度
+  const [errorMsg, setErrorMsg] = useState('');
+  const [errorState, setErrorState] = useState(false);
+
+  const handleAnalysis = () => {
+    setStartAnalysis(true);
+    if (progress === 0) {
+      setProgress(0); // 重置进度
+    }
     setLoading(true);
     const interval = setInterval(() => {
       setProgress((oldProgress) => {
@@ -62,10 +66,14 @@ function FileUploader() {
         clearInterval(interval);
         return 99; // 达到99%后停止增长
       });
-    }, 150); // 每200毫秒递增1%
+    }, 150); // 每150毫秒递增1%
 
     fetch('/api/analysis', {
-      method: 'GET',
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ existingID }), // 使用状态变量 existingID
     })
       .then((response) => {
         clearInterval(interval); // 停止进度条的定时器
@@ -77,12 +85,12 @@ function FileUploader() {
       })
       .then((data) => {
         if (data.status === 200) {
-          setFinishAnalysis(true)
-        }else{
-          setErrorMsg(data.Error)
-          console.log(errorMsg)
-          setFinishAnalysis(true)
-          setErrorState(true)
+          setFinishAnalysis(true);
+        } else {
+          setErrorMsg(data.Error);
+          console.log(errorMsg);
+          setFinishAnalysis(true);
+          setErrorState(true);
         }
       })
       .catch((error) => {
@@ -91,12 +99,18 @@ function FileUploader() {
       });
 
   };
-  const router = useRouter()
-  const linkResult = () => {
-    router.push('/result')
-  }
+
+  useEffect(() => {
+    let id = localStorage.getItem('genId');
+    if (!id) {
+      id = generateRandomString(8);
+      localStorage.setItem('genId', id);
+    }
+    setExistingID(id); // 更新状态变量
+  }, []);
+
   return (
-    <div className="p-4 max-w-md mx-auto mt-10 bg-white shadow-lg rounded-lg">
+    <div className="p-4 max-w-md mx-auto  bg-white border mb-8 rounded-lg">
       <div className="flex flex-col items-center justify-center">
         <label className="block mb-2 text-sm font-bold text-gray-700">
           上传.ins文件
@@ -113,8 +127,7 @@ function FileUploader() {
                 <>
                   确认上传
                 </>
-              )
-              }
+              )}
               {startUpload && (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -124,7 +137,7 @@ function FileUploader() {
             </Button>
           </>
         )}
-        {finishUpload && !finishAnalysis &&(
+        {finishUpload && !finishAnalysis && (
           <>
             {loading &&
               <div>
@@ -139,8 +152,7 @@ function FileUploader() {
                 <>
                   开始分析
                 </>
-              )
-              }
+              )}
               {startAnalysis && (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -155,7 +167,7 @@ function FileUploader() {
         )}
         {finishAnalysis && errorState && (
           <>
-          {errorMsg},请刷新页面重新上传！
+            {errorMsg},请刷新页面重新上传！
           </>
         )}
       </div>

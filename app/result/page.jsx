@@ -1,45 +1,80 @@
+'use client';
+import React, { useEffect, useState } from 'react';
 import MoleculeViewer from '@/components/MoleculeViewer';
-import ReadFile from '@/components/ReadFile';
 import Header from '@/components/Header';
-import FilePath from '@/components/FilePath';
+import { DownloadButton } from '@/components/DownloadButton';
 import 'katex/dist/katex.min.css';
 import { InlineMath } from 'react-katex';
 import {
   Table,
   TableBody,
-  TableCaption,
   TableCell,
   TableHead,
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { Button } from '@/components/ui/button';
-//import { useRouter } from 'next/router';
-async function result() {
-  const xyzData = await ReadFile('alishatanzhi_AIhydroWeightFinal.xyz');
-  let jsonFileContent = await ReadFile('alishatanzhi_AIhydroWeightFinalMetrics.json');
-  let fileZip = await FilePath()
-  jsonFileContent = JSON.parse(jsonFileContent);
-  // console.log(folderName)
 
-  const downloadFile = (url, downloadName = '') => {
-    // console.log(url);
-    const link = document.createElement('a');
-    fetch(url).then(res => res.blob()).then((blob) => {
-      link.href = URL.createObjectURL(blob);
-      // console.log(link.href)
-      link.download = downloadName;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-    });
-  };
-  let formular = jsonFileContent.formular.replace(/([A-Z][a-z]*)(\d+)/g, (match, p1, p2) => `${p1}_{${p2}}`);
+function ResultPage() {
+  const [jsonFileContent, setJsonFileContent] = useState({});
+  const [formular, setFormular] = useState('');
+  const [xyzData, setXyzData] = useState()
+
+
+
+  useEffect(() => {
+
+    let existingID = localStorage.getItem('genId');
+
+    fetch('/api/readFile', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ existingID, fileName: `${existingID}_AIhydroWeightFinalMetrics.json` }),
+    })
+      .then((response) => {
+        if (response.ok) {
+          return response.json();
+        } else {
+          throw new Error('Failed to fetch data');
+        }
+      })
+      .then((data) => {
+        setJsonFileContent(JSON.parse(data.fileContent));
+        setFormular(JSON.parse(data.fileContent).formular.replace(/([A-Z][a-z]*)(\d+)/g, (match, p1, p2) => `${p1}_{${p2}}`))
+      })
+      .catch((error) => {
+        console.error('Error fetching data:', error);
+      });
+
+    fetch('/api/readFile', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ existingID, fileName: `${existingID}_AIhydroWeightFinal.xyz` }),
+    })
+      .then((response) => {
+        if (response.ok) {
+          return response.json();
+        } else {
+          throw new Error('Failed to fetch data');
+        }
+      })
+      .then((data) => {
+        setXyzData(data.fileContent);
+      })
+      .catch((error) => {
+        console.error('Error fetching data:', error);
+      });
+
+  }, []);
+
   return (
     <>
       <Header />
       <div className="min-h-[450px]">
-        <MoleculeViewer xyzData={xyzData}/>
+        <MoleculeViewer xyzData={xyzData} />
       </div>
       <div
         className="flex justify-center"
@@ -65,20 +100,18 @@ async function result() {
               <TableCell>{jsonFileContent.q1}</TableCell>
               <TableCell>{jsonFileContent.structure_mes}</TableCell>
               <TableCell>{jsonFileContent.quality_mes}</TableCell>
-              <TableCell><InlineMath math={formular} /></TableCell>
+              <TableCell>
+                <InlineMath math={formular} />
+              </TableCell>
             </TableRow>
           </TableBody>
         </Table>
-      
       </div>
       <div className="flex justify-center">
-
-       <a href={`alishatanzhi_AIhydroWeightFinal.zip`} download>
-          <Button>点击此处下载文件</Button>
-       </a>
+        <DownloadButton />
       </div>
     </>
   );
 }
 
-export default result;
+export default ResultPage;
