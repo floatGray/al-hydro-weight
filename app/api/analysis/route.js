@@ -11,12 +11,13 @@ export const POST = async (req, res) => {
     // 将 exec 转换为 Promise
     const execPromise = (command) =>
       new Promise((resolve, reject) => {
-        exec(command, (error, stdout, stderr) => {
+        exec(command, { timeout: 10000 }, async (error, stdout, stderr) => {
           if (error) {
             reject(`exec error: ${error}`);
           } else {
             resolve(stdout);
           }
+          resolve(stdout.trim());
         });
       });
 
