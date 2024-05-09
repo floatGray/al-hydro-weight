@@ -5,7 +5,6 @@ import { promises as fs } from 'fs'; // 确保导入 fs 的 promises API
 export const POST = async (req, res) => {
   const data = await req.json()
   const id = data.existingID
-  console.log(id)
   try {
     const command = `cd .. && cd xrd && sh temp_demo_new.sh ${id}`;
     // 将 exec 转换为 Promise

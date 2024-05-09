@@ -6,7 +6,6 @@ import path from "path";
 
 export const POST = async (req, res) => {
   const {id} = await req.json()
-  console.log(id)
   const folderName = await FilePath({id})
   const filePath = path.join(process.cwd(), `../xrd/${folderName}/${id}_AIhydroWeightFinal.zip`);
   const buffer = await readFile(filePath);
