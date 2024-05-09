@@ -31,7 +31,7 @@ const InfoForm = () => {
     return (
         <>
             <FormProvider {...methods}>
-                <form onSubmit={methods.handleSubmit(onSubmit)} className="space-y-6 bg-white p-8 rounded shadow-md max-w-lg mx-auto my-10">
+                <form onSubmit={methods.handleSubmit(onSubmit)} className="space-y-6 bg-white p-8 rounded  max-w-lg mx-auto my-10">
                     <p className="text-lg text-center font-medium mb-6">在使用前，请告诉我们您的邮箱与单位</p>
                     <div>
                         <label htmlFor="email" className="block text-sm font-medium text-gray-700">邮箱</label>

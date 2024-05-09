@@ -1,13 +1,20 @@
-// pages/api/download.js
-import fs from 'fs';
-import path from 'path';
+import { NextResponse } from 'next/server';
+import FilePath from '@/components/FilePath.js';
+import { readFile } from "fs/promises";
+import path from "path";
 
-export default function handler(req, res) {
-  const filePath = path.join('/home/PJLAB/liyuqiang/ai4chem/xrd', req.query.fileZip, 'alishatanzhi_AIhydroWeightFinal.zip');
 
-  res.setHeader('Content-Type', 'application/zip');
-  res.setHeader('Content-Disposition', `attachment; filename=alishatanzhi_AIhydroWeightFinal.zip`);
+export const POST = async (req, res) => {
+  const {id} = await req.json()
+  const folderName = await FilePath({id})
+  const filePath = path.join(process.cwd(), `../xrd/${folderName}/${id}_AIhydroWeightFinal.zip`);
+  const buffer = await readFile(filePath);
 
-  const fileStream = fs.createReadStream(filePath);
-  fileStream.pipe(res);
-}
+  const headers = new Headers();
+  headers.append("Content-Disposition", 'attachment; filename="myArchive.zip"'); 
+  headers.append("Content-Type", "application/zip");
+
+  return new NextResponse(buffer, {
+    headers,
+  });
+};
