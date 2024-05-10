@@ -113,11 +113,11 @@ function FileUploader() {
     <div className="p-4 max-w-md mx-auto  bg-white border mb-8 rounded-lg">
       <div className="flex flex-col items-center justify-center">
         <label className="block mb-2 text-sm font-bold text-gray-700">
-          上传.ins文件
+          Upload .ins file.
         </label>
         <Input type="file" accept=".ins" onChange={handleInsFileChange} />
         <label className="block mb-2 text-sm font-bold text-gray-700">
-          上传.hkl文件
+          Upload .hkl file.
         </label>
         <Input type="file" accept=".hkl" onChange={handleHklFileChange} />
         {insFile && hklFile && !finishUpload && (
@@ -125,7 +125,7 @@ function FileUploader() {
             <Button className="flex justify-center mt-4" onClick={handleUpload}>
               {!startUpload && (
                 <>
-                  确认上传
+                  Upload
                 </>
               )}
               {startUpload && (
@@ -140,9 +140,9 @@ function FileUploader() {
         {finishUpload && !finishAnalysis && (
           <>
             {loading &&
-              <div>
+              <div className="w-full my-4">
                 <Progress value={progress} />
-                当前进度:{progress}%
+                Current progress:{progress}%
               </div>}
             <Button
               className="flex justify-center mt-4"
@@ -150,7 +150,7 @@ function FileUploader() {
             >
               {!startAnalysis && (
                 <>
-                  开始分析
+                  Analysis
                 </>
               )}
               {startAnalysis && (
@@ -167,7 +167,7 @@ function FileUploader() {
         )}
         {finishAnalysis && errorState && (
           <>
-            {errorMsg},请刷新页面重新上传！
+            {errorMsg},Please refresh the page and re-upload!
           </>
         )}
       </div>

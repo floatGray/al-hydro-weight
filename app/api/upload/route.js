@@ -17,9 +17,7 @@ export const POST = async (req, res) => {
   const insBuffer = Buffer.from(await insFile.arrayBuffer())
   const hklBuffer = Buffer.from(await hklFile.arrayBuffer())
   try {
-    const assetsDir = path.resolve('../xrd');  // 定义存储文件的目录路径
-
-    // 写入文件到public/assets目录
+    const assetsDir = path.resolve('../xrd/asset');  // 定义存储文件的目录路径
     await writeFile(
         path.join(assetsDir, `${id}.ins`),
         insBuffer

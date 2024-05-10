@@ -7,9 +7,9 @@ async function Home() {
     <>
       <Header />
 
-      <div className=" divide-y divide-gray-900/10 bg-gray-50 h-screen">
+      <div className="divide-y divide-gray-900/10 bg-gray-50 h-screen">
 
-        <div className="grid grid-cols-1 gap-x-8 gap-y-8 pt-10 md:grid-cols-3 px-12  w-3/4 mx-auto">
+        <div className="grid grid-cols-1 gap-x-8 gap-y-8 pt-24 md:grid-cols-3 md:px-12  w-3/4 mx-auto">
           <div className="px-4 sm:px-0">
             <h2 className="text-base font-semibold leading-7 text-gray-900">Instructions:</h2>
             <p className="mt-1 text-sm leading-6 text-gray-600">1. The diffraction data file .hkl and the initial .ins file (generated from a .p4p file) are required as inputs. Accurate elemental composition is not necessary; you can set a broad elemental composition in the SFAC command of the .ins file.</p>
