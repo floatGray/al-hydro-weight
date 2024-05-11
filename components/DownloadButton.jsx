@@ -41,7 +41,7 @@ export const DownloadButton = () => {
     return (
         <div className="flex justify-center">
             <Button onClick={() => downloadFile('your_filename.zip')}>
-                点击此处下载文件
+                Download Files
             </Button>
         </div>
     );
